@@ -7,6 +7,7 @@ import { DevelopersModule } from './modules/developers/developers.module';
 import { PropertiesModule } from './modules/properties/properties.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { CloudinaryModule } from './common/cloudinary/cloudinary.module';
+import { CompoundsModule } from './modules/compounds/compounds.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { CloudinaryModule } from './common/cloudinary/cloudinary.module';
     PropertiesModule,
     AuthModule,
     CloudinaryModule,
+    CompoundsModule,
   ],
   controllers: [],
   providers: [],

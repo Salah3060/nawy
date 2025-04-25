@@ -5,7 +5,6 @@ import { DevelopersService } from './developers.service';
 import { Developer, DeveloperSchema } from './schemas/developer.schema';
 import { CloudinaryModule } from '../../common/cloudinary/cloudinary.module';
 
-CloudinaryModule;
 @Module({
   imports: [
     MongooseModule.forFeature([
@@ -15,5 +14,6 @@ CloudinaryModule;
   ],
   controllers: [DevelopersController],
   providers: [DevelopersService],
+  exports: [DevelopersService],
 })
 export class DevelopersModule {}

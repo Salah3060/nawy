@@ -30,8 +30,7 @@ export class DevelopersController {
   ) {}
 
   @Post('create')
-  @UseGuards(JwtAuthGuard, RolesGuard)
-  @Roles('admin') // Only admin can access this
+  @UseGuards(JwtAuthGuard)
   @UseInterceptors(
     FileInterceptor('logo', {
       limits: { fileSize: MAX_FILE_SIZE },

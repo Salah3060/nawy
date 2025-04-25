@@ -28,7 +28,7 @@ export class DevelopersService {
       isDeleted: false,
     });
     if (existingDevelopers.length > 0) {
-      throw new BadRequestException('Developer already exists'); // Return BadRequestException if username exists
+      throw new BadRequestException('Developer already exists');
     }
 
     const newDeveloper = new this.developerModel({
@@ -40,7 +40,7 @@ export class DevelopersService {
     return savedDeveloper;
   }
 
-  // Get Many Users
+  // Get Many Developers
   async getMany(
     filter: DeveloperFilter,
     selections: string = '',
@@ -48,7 +48,7 @@ export class DevelopersService {
     return await this.developerModel.find(filter).select(selections).exec();
   }
 
-  // Get One User
+  // Get One Developer
   async getOne(
     filter: DeveloperFilter,
     selections: string = '',
@@ -59,7 +59,7 @@ export class DevelopersService {
       .exec();
 
     if (!developer) {
-      throw new NotFoundException('User not found');
+      throw new NotFoundException('Developer not found');
     }
     return developer;
   }

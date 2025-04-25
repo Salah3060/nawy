@@ -18,4 +18,12 @@ export class CloudinaryService {
         .end(file.buffer);
     });
   }
+
+  async uploadImages(
+    files: Express.Multer.File[],
+    folder: string,
+  ): Promise<UploadApiResponse[]> {
+    const uploadPromises = files.map((file) => this.uploadImage(file, folder));
+    return Promise.all(uploadPromises);
+  }
 }

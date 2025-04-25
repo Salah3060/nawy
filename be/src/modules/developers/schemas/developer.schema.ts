@@ -12,7 +12,7 @@ export class Developer {
   @Prop({ required: true })
   description: string;
 
-  @Prop({ required: true, unique: true })
+  @Prop({ type: Number, required: true, unique: true })
   referenceNumber: number;
 
   @Prop({ required: true })
