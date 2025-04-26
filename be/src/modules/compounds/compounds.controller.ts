@@ -11,7 +11,7 @@ import {
 } from '@nestjs/common';
 import { CompoundsService } from './compounds.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
-import { CreateCompoundrDto } from './dtos/createCompoundDto';
+import { CreateCompoundDto } from './dtos/createCompoundDto';
 import { Compound } from './schemas/compounds.schema';
 import { RequestWithUser } from '../../common/interfaces/request-with-user.interface';
 import {
@@ -23,7 +23,9 @@ import {
   imageFileFilter,
   MAX_FILE_SIZE,
 } from '../../common/utils/multer.config';
+import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 
+@ApiTags('compounds')
 @Controller('compounds')
 export class CompoundsController {
   constructor(
@@ -45,9 +47,17 @@ export class CompoundsController {
       },
     ),
   )
+  @ApiOperation({ summary: 'Create a new compound' })
+  @ApiResponse({
+    status: 201,
+    description: 'Compound created successfully.',
+    type: Compound,
+  })
+  @ApiResponse({ status: 400, description: 'Missing required image(s).' })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
   async create(
     @Req() req: RequestWithUser,
-    @Body() compound: CreateCompoundrDto,
+    @Body() compound: CreateCompoundDto,
     @UploadedFiles()
     files: {
       masterPlan: Express.Multer.File[];
@@ -65,7 +75,7 @@ export class CompoundsController {
       throw new BadRequestException('At least one image is required.');
     }
 
-    const uploadedmasterPlan = await this.cloudinaryService.uploadImage(
+    const uploadedMasterPlan = await this.cloudinaryService.uploadImage(
       masterPlanFile,
       'compounds',
     );
@@ -82,7 +92,7 @@ export class CompoundsController {
     return this.compoundsService.create(
       userId,
       compound,
-      uploadedmasterPlan.url,
+      uploadedMasterPlan.url,
       uploadedImagesUrls,
     );
   }

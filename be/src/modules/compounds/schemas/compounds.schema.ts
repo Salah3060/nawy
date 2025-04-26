@@ -1,5 +1,7 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, Types } from 'mongoose';
+import { CompoundStatus } from '../compound.enum';
+import { PropertyType } from '../../properties/properties.enum';
 
 export type CompoundDocument = Compound & Document;
 
@@ -35,11 +37,15 @@ export class Compound {
   @Prop({ type: Number, required: true })
   totalUnits: number;
 
-  @Prop({ type: [String], required: true })
-  propertyTypes: string[];
+  @Prop({ type: [String], required: true, enum: PropertyType })
+  propertyTypes: PropertyType[];
 
-  @Prop({ required: true })
-  status: string;
+  @Prop({
+    type: String,
+    enum: CompoundStatus,
+    required: true,
+  })
+  status: CompoundStatus;
 
   @Prop({ type: Date, required: true })
   deliveryDate: Date;
@@ -50,7 +56,7 @@ export class Compound {
   @Prop({ type: String, required: true })
   masterPlan: string;
 
-  // Developer ID (refers to User)
+  // Developer ID
   @Prop({ type: Types.ObjectId, ref: 'Developer', required: true })
   developerId: Types.ObjectId;
 

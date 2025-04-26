@@ -16,5 +16,6 @@ import { DevelopersModule } from '../developers/developers.module';
   ],
   controllers: [CompoundsController],
   providers: [CompoundsService],
+  exports: [CompoundsService],
 })
 export class CompoundsModule {}

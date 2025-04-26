@@ -1,6 +1,6 @@
 import { Types } from 'mongoose';
 
-export type CompoundFilter = {
+export type PropertyFilter = {
   _id?: Types.ObjectId;
   name?: string;
   referenceNumber?: number;

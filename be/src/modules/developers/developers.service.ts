@@ -6,7 +6,7 @@ import {
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
-import { Developer, DeveloperDocument } from './schemas/developer.schema';
+import { Developer, DeveloperDocument } from './schemas/developers.schema';
 import { DeveloperFilter } from './developers.interface';
 
 @Injectable()
