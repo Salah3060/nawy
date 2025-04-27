@@ -63,6 +63,7 @@ export class PropertiesService {
     selections: string = '',
     page = 1,
     limit = 10,
+    populateList: { path: string; select?: string }[] = [],
   ): Promise<PropertyDocument[]> {
     const skip = (page - 1) * limit;
 
@@ -71,6 +72,7 @@ export class PropertiesService {
       .select(selections)
       .skip(skip)
       .limit(limit)
+      .populate(populateList)
       .exec();
   }
 

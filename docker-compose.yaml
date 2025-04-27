@@ -1,0 +1,43 @@
+version: '3.8'
+
+services:
+  mongo:
+    image: mongo
+    container_name: mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo-data:/data/db
+    networks:
+      - app-network
+
+  backend:
+    build: ./be
+    container_name: backend
+    ports:
+      - "5000:3001"
+    environment:
+      - MONGO_URI=mongodb://mongo:27017/Nawy
+    depends_on:
+      - mongo
+    networks:
+      - app-network
+
+  frontend:
+    build: ./fe
+    container_name: frontend
+    ports:
+      - "3000:3000"
+    environment:
+      - BACKEND_URL=http://backend:5000
+    depends_on:
+      - backend
+    networks:
+      - app-network
+
+volumes:
+  mongo-data:
+
+networks:
+  app-network:
+    driver: bridge

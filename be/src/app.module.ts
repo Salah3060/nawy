@@ -8,7 +8,7 @@ import { PropertiesModule } from './modules/properties/properties.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { CloudinaryModule } from './common/cloudinary/cloudinary.module';
 import { CompoundsModule } from './modules/compounds/compounds.module';
-import { LoggerMiddleware } from './common/middleware/logger.middleware';
+import { LoggerMiddleware } from './common/middlewares/logger.middleware';
 
 @Module({
   imports: [

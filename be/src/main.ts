@@ -18,10 +18,17 @@ async function bootstrap() {
     ],
   });
 
+  // Logs
   const app = await NestFactory.create(AppModule, { logger });
+
+  // Enable CORS for all domains
+  app.enableCors();
 
   // Enable validation globally
   app.useGlobalPipes(new ValidationPipe({ transform: true }));
+
+  // Set the global prefix
+  app.setGlobalPrefix('api-v1');
 
   // Doc
   const config = new DocumentBuilder()

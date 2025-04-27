@@ -17,10 +17,7 @@ import { Developer } from './schemas/developers.schema';
 import { RequestWithUser } from '../../common/interfaces/request-with-user.interface';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { CloudinaryService } from '../../common/cloudinary/cloudinary.service';
-import {
-  imageFileFilter,
-  MAX_FILE_SIZE,
-} from '../../common/utils/multer.config';
+import { imageFileFilter, MAX_FILE_SIZE } from '../../config/multer.config';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
 
 @ApiTags('developers')
