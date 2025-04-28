@@ -2,7 +2,9 @@ import {
   BadRequestException,
   Body,
   Controller,
+  Get,
   Post,
+  Query,
   Req,
   UploadedFile,
   UseGuards,
@@ -10,8 +12,6 @@ import {
 } from '@nestjs/common';
 import { DevelopersService } from './developers.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
-import { RolesGuard } from '../../common/guards/roles.guard';
-import { Roles } from '../../common/decorators/roles.decorator';
 import { CreateDeveloperDto } from './dtos/createDeveloperDto';
 import { Developer } from './schemas/developers.schema';
 import { RequestWithUser } from '../../common/interfaces/request-with-user.interface';
@@ -19,6 +19,7 @@ import { FileInterceptor } from '@nestjs/platform-express';
 import { CloudinaryService } from '../../common/cloudinary/cloudinary.service';
 import { imageFileFilter, MAX_FILE_SIZE } from '../../config/multer.config';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { GetDevelopersDto } from './dtos/getDevelopersDto';
 
 @ApiTags('developers')
 @Controller('developers')
@@ -57,5 +58,15 @@ export class DevelopersController {
 
     const userId: string = req.user.userId!;
     return this.developersService.create(userId, developer, uploadedImage.url);
+  }
+
+  @Get('all')
+  @ApiOperation({ summary: 'Get all developers with pagination' })
+  @ApiResponse({ status: 200, description: 'List of developers returned.' })
+  async findAll(@Query() query: GetDevelopersDto): Promise<Developer[]> {
+    return this.developersService.getMany(
+      { isDeleted: false },
+      query.selections,
+    );
   }
 }

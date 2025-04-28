@@ -23,8 +23,8 @@ export class AuthController {
         accessToken: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...',
         user: {
           _id: '60d0fe4f5311236168a109ca',
-          name: 'John Doe',
-          username: 'johndoe123',
+          name: 'Ahmed Ayman',
+          username: 'a.ayman@nawy.com',
         },
       },
     },

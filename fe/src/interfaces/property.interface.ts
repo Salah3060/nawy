@@ -1,3 +1,4 @@
+import { Types } from "mongoose";
 export interface PropertyFormData {
   name: string;
   description: string;
@@ -21,4 +22,47 @@ export interface PropertyFormData {
   amenityInput: string;
   floorPlan: File | null;
   images: File[];
+}
+
+export interface PropertyFilter {
+  propertyType: string;
+  beds: string;
+  baths: string;
+  priceRange: [number, number];
+  developer: string;
+}
+
+export interface Property {
+  _id: Types.ObjectId; // required
+
+  // Optional fields
+  name?: string;
+  description?: string;
+  referenceNumber?: number;
+
+  compoundId?: Types.ObjectId;
+  latitude?: number;
+  longitude?: number;
+
+  type?: string;
+  floorNumber?: number;
+  totalFloors?: number;
+  width?: number;
+  length?: number;
+  height?: number;
+  area?: number;
+  beds?: number;
+  baths?: number;
+  parkingSpaces?: number;
+  finishingStatus?: string;
+  finishingType?: string;
+  deliveryDate?: Date;
+  price?: number;
+  amenities?: string[];
+  floorPlan?: string;
+  images: string[];
+
+  developerId: { _id: Types.ObjectId; logo: string };
+  userId?: Types.ObjectId;
+  isDeleted?: boolean;
 }

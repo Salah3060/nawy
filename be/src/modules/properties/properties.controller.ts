@@ -26,6 +26,9 @@ import { Property, PropertyDocument } from './schemas/properties.schema';
 import { GetPropertiesDto } from './dtos/getPropertiesDto';
 import { GetPropertyDto } from './dtos/getPropertyDto';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { PropertyFilter } from './properties.interface';
+import { DevelopersService } from '../developers/developers.service';
+import { Types } from 'mongoose';
 
 @ApiTags('properties')
 @Controller('properties')
@@ -33,6 +36,7 @@ export class PropertiesController {
   constructor(
     private readonly propertiesService: PropertiesService,
     private readonly cloudinaryService: CloudinaryService,
+    private developersService: DevelopersService,
   ) {}
 
   @Post('create')
@@ -98,13 +102,38 @@ export class PropertiesController {
   @ApiOperation({ summary: 'Get all properties with pagination' })
   @ApiResponse({ status: 200, description: 'List of properties returned.' })
   async findAll(@Query() query: GetPropertiesDto): Promise<Property[]> {
-    return this.propertiesService.getMany(
-      { isDeleted: false },
-      '',
-      query.page,
-      query.limit,
-      [{ path: 'developerId', select: 'logo' }],
-    );
+    let filter: PropertyFilter = { isDeleted: false };
+    if (query.type) filter.type = query.type;
+    if (query.beds) {
+      if (query.beds === 5) {
+        filter.beds = { $gte: 5 };
+      } else {
+        filter.beds = query.beds;
+      }
+    }
+    if (query.baths) {
+      if (query.baths === 5) {
+        filter.baths = { $gte: 5 };
+      } else {
+        filter.baths = query.baths;
+      }
+    }
+    if (query.priceMin || query.priceMax) {
+      filter.price = {};
+      if (query.priceMin) filter.price.$gte = query.priceMin;
+      if (query.priceMax) filter.price.$lte = query.priceMax;
+    }
+    if (query.developer) {
+      const developer = (await this.developersService.getOne({
+        name: query.developer,
+        isDeleted: false,
+      })) as { _id: Types.ObjectId };
+      filter.developerId = developer._id;
+    }
+
+    return this.propertiesService.getMany(filter, '', query.page, query.limit, [
+      { path: 'developerId', select: 'logo' },
+    ]);
   }
 
   @Get('one/:id')

@@ -1,13 +1,45 @@
 // Property  Actions
 
-import { PropertyFormData } from "@/interfaces/property.interface";
+import {
+  PropertyFilter,
+  PropertyFormData,
+} from "@/interfaces/property.interface";
 import axios from "@/lib/axios";
 
+// Generate Query Parameters
+function generateQueryParams(
+  page: number,
+  limit: number,
+  filters: PropertyFilter
+): string {
+  const params = new URLSearchParams();
+  params.append("page", String(page));
+  params.append("limit", String(limit));
+
+  if (filters.propertyType) {
+    params.append("type", filters.propertyType);
+  }
+  if (filters.beds) {
+    params.append("beds", filters.beds);
+  }
+  if (filters.baths) {
+    params.append("baths", filters.baths);
+  }
+  if (filters.developer) {
+    params.append("developer", filters.developer);
+  }
+  if (filters.priceRange[0] !== 0 || filters.priceRange[1] !== 0) {
+    params.append("priceMin", filters.priceRange[0].toString());
+    params.append("priceMax", filters.priceRange[1].toString());
+  }
+
+  return params.toString();
+}
+
 // Get Properties
-export async function getProperties(page: number = 1) {
-  const response = await axios.get(
-    `/api-v1/properties/all?page=${page}&limit=${5}`
-  );
+export async function getProperties(page: number = 1, filters: PropertyFilter) {
+  let params = generateQueryParams(page, 5, filters);
+  const response = await axios.get(`/api-v1/properties/all?${params}`);
   return response;
 }
 
