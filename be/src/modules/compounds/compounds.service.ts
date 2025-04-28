@@ -28,6 +28,7 @@ export class CompoundsService {
     images: string[],
   ): Promise<CompoundDocument> {
     // Check if the developer exists
+    const userObjectId = new Types.ObjectId(userId);
     compound.developerId = new Types.ObjectId(compound.developerId);
     const existingDevelopers = await this.developersService.getOne({
       _id: compound.developerId,
@@ -45,7 +46,7 @@ export class CompoundsService {
     }
 
     const newCompound = new this.compoundModel({
-      userId,
+      userId: userObjectId,
       masterPlan,
       images,
       ...compound,

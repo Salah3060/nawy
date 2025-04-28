@@ -1,7 +1,7 @@
 import { Navbar } from "@/components/ui/navbar";
 import type { Metadata } from "next";
 import "../styles/globals.css";
-import { ErrorProvider } from "@/context/ErrorContext";
+import { MessageProvider } from "@/context/MessageContext";
 import { UserProvider } from "@/context/UserContext";
 import { Toaster } from "sonner";
 
@@ -22,11 +22,11 @@ export default function RootLayout({
     <html lang="en">
       <body>
         <UserProvider>
-          <ErrorProvider>
+          <MessageProvider>
             <Navbar />
             <Toaster position="bottom-right" />
             {children}
-          </ErrorProvider>
+          </MessageProvider>
         </UserProvider>
       </body>
     </html>

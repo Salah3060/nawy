@@ -8,6 +8,7 @@ import {
   IsDateString,
   IsMongoId,
   IsEnum,
+  IsOptional,
 } from 'class-validator';
 import { Types } from 'mongoose';
 import {
@@ -55,18 +56,20 @@ export class CreatePropertyDto {
   @ApiProperty({
     description: 'Latitude of the property location.',
     example: '37.7749',
+    required: false,
   })
   @IsNumberString()
-  @IsNotEmpty()
-  latitude: number;
+  @IsOptional()
+  latitude?: number;
 
   @ApiProperty({
     description: 'Longitude of the property location.',
     example: '-122.4194',
+    required: false,
   })
   @IsNumberString()
-  @IsNotEmpty()
-  longitude: number;
+  @IsOptional()
+  longitude?: number;
 
   // Property Details
   @ApiProperty({

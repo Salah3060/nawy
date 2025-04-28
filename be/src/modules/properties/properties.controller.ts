@@ -41,7 +41,7 @@ export class PropertiesController {
     FileFieldsInterceptor(
       [
         { name: 'floorPlan', maxCount: 1 },
-        { name: 'images', maxCount: 10 },
+        { name: 'images', maxCount: 20 },
       ],
       {
         limits: { fileSize: MAX_FILE_SIZE },
@@ -112,6 +112,9 @@ export class PropertiesController {
   @ApiResponse({ status: 200, description: 'Property returned successfully.' })
   @ApiResponse({ status: 404, description: 'Property not found.' })
   async findOne(@Param() { id }: GetPropertyDto): Promise<Property> {
-    return this.propertiesService.getOne({ _id: id, isDeleted: false });
+    return this.propertiesService.getOne({ _id: id, isDeleted: false }, '', [
+      { path: 'developerId', select: 'logo' },
+      { path: 'compoundId', select: 'name masterPlan' },
+    ]);
   }
 }

@@ -1,5 +1,4 @@
 import axios from "axios";
-import { useError } from "@/context/ErrorContext";
 
 const instance = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL,
@@ -12,7 +11,7 @@ instance.interceptors.response.use(
     const errorMessage =
       error.response?.data?.message || "Something went wrong!";
     console.error(errorMessage);
-    return Promise.reject(error); // Just reject, no setError() here
+    return Promise.reject(error);
   }
 );
 

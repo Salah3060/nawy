@@ -9,8 +9,8 @@ import { Model } from 'mongoose';
 import { CreatePropertyDto } from './dtos/createPropertyDto';
 import { InjectModel } from '@nestjs/mongoose';
 import { DevelopersService } from '../developers/developers.service';
-import { Types } from 'mongoose';
 import { CompoundsService } from '../compounds/compounds.service';
+import { Types } from 'mongoose';
 
 @Injectable()
 export class PropertiesService {
@@ -28,6 +28,8 @@ export class PropertiesService {
     floorPlan: string,
     images: string[],
   ): Promise<PropertyDocument> {
+    const userObjectId = new Types.ObjectId(userId);
+
     // Check if the developer exists
     property.compoundId = new Types.ObjectId(property.compoundId);
 
@@ -47,7 +49,7 @@ export class PropertiesService {
     }
 
     const newProperty = new this.propertyModel({
-      userId,
+      userId: userObjectId,
       floorPlan,
       images,
       developerId: existingCompound.developerId,
@@ -80,10 +82,12 @@ export class PropertiesService {
   async getOne(
     filter: PropertyFilter,
     selections: string = '',
+    populateList: { path: string; select?: string }[] = [],
   ): Promise<PropertyDocument> {
     const property = await this.propertyModel
       .findOne(filter)
       .select(selections)
+      .populate(populateList)
       .exec();
 
     if (!property) {

@@ -24,10 +24,10 @@ export class Property {
   @Prop({ type: Types.ObjectId, ref: 'Compound', required: true })
   compoundId: Types.ObjectId;
 
-  @Prop({ type: Number, required: true })
+  @Prop({ type: Number, required: false })
   latitude: number;
 
-  @Prop({ type: Number, required: true })
+  @Prop({ type: Number, required: false })
   longitude: number;
 
   // Property Details

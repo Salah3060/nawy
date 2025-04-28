@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import axios from "axios";
 import { FaBed, FaBath, FaRulerCombined, FaCar } from "react-icons/fa";
 import {
@@ -12,7 +12,7 @@ import {
   CardContent,
 } from "@/components/ui/card";
 import { getProperties } from "@/actions/properties";
-import { useError } from "@/context/ErrorContext";
+import { useMessage } from "@/context/MessageContext";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -21,54 +21,53 @@ export default function Home() {
   const [loading, setLoading] = useState<boolean>(true);
   const [page, setPage] = useState<number>(1);
   const [isFetchingMore, setIsFetchingMore] = useState(false);
-  const { setError } = useError();
+  const { setMessage } = useMessage();
+  const isThrottled = useRef(false);
 
-  const fetchProperties = useCallback(
-    async (pageNumber: number) => {
-      try {
-        if (pageNumber === 1) setLoading(true);
-        else setIsFetchingMore(true);
+  const fetchProperties = useCallback(async (pageNumber: number) => {
+    try {
+      isThrottled.current = true;
+      pageNumber === 1 ? setLoading(true) : setIsFetchingMore(true);
 
-        const response = await getProperties(pageNumber);
-        const newProperties = response.data;
+      const response = await getProperties(pageNumber);
+      const newProperties = response.data;
 
-        if (pageNumber === 1) {
-          setProperties(newProperties);
-        } else {
-          setProperties((prev) => [...prev, ...newProperties]);
-        }
+      setProperties((prev) =>
+        pageNumber === 1 ? newProperties : [...prev, ...newProperties]
+      );
+      isThrottled.current = false;
+    } catch (error) {
+      const errorMessage =
+        (axios.isAxiosError(error) && error.response?.data?.message) ||
+        "Something went wrong!";
+      setMessage(errorMessage, "error");
+    } finally {
+      setLoading(false);
+      setIsFetchingMore(false);
+    }
+  }, []);
 
-        setLoading(false);
-        setIsFetchingMore(false);
-      } catch (error) {
-        setLoading(false);
-        setIsFetchingMore(false);
-        const errorMessage =
-          (axios.isAxiosError(error) && error.response?.data?.message) ||
-          "Something went wrong!";
-        setError(errorMessage);
-      }
-    },
-    [setError]
-  );
-
+  // Initial fetch
   useEffect(() => {
     fetchProperties(1);
   }, [fetchProperties]);
 
-  useEffect(() => {
-    fetchProperties(1);
-  }, [fetchProperties]);
-
+  // Infinite Scroll with throttle
   useEffect(() => {
     const handleScroll = () => {
+      if (isThrottled.current) return;
+
       const scrollTop = window.scrollY;
       const windowHeight = window.innerHeight;
       const documentHeight = document.documentElement.scrollHeight;
 
-      // Check if user is at bottom
       if (scrollTop + windowHeight >= documentHeight - 100 && !isFetchingMore) {
-        setPage((prevPage) => prevPage + 1);
+        isThrottled.current = true; // block
+        setPage((prev) => prev + 1);
+
+        setTimeout(() => {
+          isThrottled.current = false; // allow again after 500ms
+        }, 500);
       }
     };
 
@@ -76,6 +75,7 @@ export default function Home() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, [isFetchingMore]);
 
+  // Fetch next page when `page` increases
   useEffect(() => {
     if (page > 1) {
       fetchProperties(page);
@@ -106,7 +106,7 @@ export default function Home() {
 
       <section className="py-16">
         <div className="container mx-auto px-4">
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-2 gap-8">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8">
             {properties.map((property) => (
               <Card
                 key={property.referenceNumber}
@@ -135,19 +135,15 @@ export default function Home() {
                   <CardTitle className="text-xl font-semibold mt-4">
                     {property.name}
                   </CardTitle>
-                  <CardDescription className="text-muted-foreground text-sm flex gap-4 items-center">
+                  <CardDescription className="text-muted-foreground text-sm flex gap-4 items-center flex-wrap">
                     <FaBed className="text-primary" /> {property.beds} Beds
                     <FaBath className="text-primary" /> {property.baths} Baths
                     <FaRulerCombined className="text-primary" /> {property.area}{" "}
-                    sq m
+                    m²
                     <FaCar className="text-primary" /> {property.baths} Parking
                   </CardDescription>
                 </CardHeader>
-                {/* <CardContent>
-                  <p className="text-sm text-muted-foreground">
-                    {property.description}
-                  </p>
-                </CardContent> */}
+
                 <CardFooter>
                   <span className="font-semibold text-lg">
                     {property.price} EGP

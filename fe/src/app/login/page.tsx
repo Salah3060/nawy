@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button";
 import Image from "next/image";
 import { useState } from "react";
 import { login } from "@/actions/auth";
-import { useError } from "@/context/ErrorContext";
+import { useMessage } from "@/context/MessageContext";
 import axios from "axios";
 import { useUserContext } from "@/context/UserContext";
 import { useRouter } from "next/navigation";
@@ -13,7 +13,7 @@ export default function LoginPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState<boolean>(false);
-  const { setError } = useError();
+  const { setMessage } = useMessage();
   const { setUser } = useUserContext();
   const router = useRouter();
 
@@ -31,14 +31,17 @@ export default function LoginPage() {
           username: response.data.username,
         });
         localStorage.setItem("nawy-token", response.data.accessToken);
+        setMessage(`Welcome back, ${response.data.name}`, "normal");
         router.push("/");
+      } else {
+        setMessage("Invalid data!", "error");
       }
     } catch (error) {
       setLoading(false);
       const errorMessage =
         (axios.isAxiosError(error) && error.response?.data?.message) ||
         "Something went wrong!";
-      setError(errorMessage);
+      setMessage(errorMessage, "error");
     }
   }
 
@@ -61,7 +64,7 @@ export default function LoginPage() {
             Please login to continue to your account.
           </p>
 
-          <form onSubmit={handleLogin} noValidate>
+          <form onSubmit={handleLogin}>
             <div className="space-y-4">
               <Input
                 type="email"

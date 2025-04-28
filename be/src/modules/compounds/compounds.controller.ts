@@ -2,7 +2,9 @@ import {
   BadRequestException,
   Body,
   Controller,
+  Get,
   Post,
+  Query,
   Req,
   UploadedFile,
   UploadedFiles,
@@ -21,6 +23,7 @@ import {
 import { CloudinaryService } from '../../common/cloudinary/cloudinary.service';
 import { imageFileFilter, MAX_FILE_SIZE } from '../../config/multer.config';
 import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { GetCompoundsDto } from './dtos/getCompoundsDto';
 
 @ApiTags('compounds')
 @Controller('compounds')
@@ -91,6 +94,16 @@ export class CompoundsController {
       compound,
       uploadedMasterPlan.url,
       uploadedImagesUrls,
+    );
+  }
+
+  @Get('all')
+  @ApiOperation({ summary: 'Get all compounds with pagination' })
+  @ApiResponse({ status: 200, description: 'List of compounds returned.' })
+  async findAll(@Query() query: GetCompoundsDto): Promise<Compound[]> {
+    return this.compoundsService.getMany(
+      { isDeleted: false },
+      query.selections,
     );
   }
 }

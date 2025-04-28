@@ -8,6 +8,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Developer, DeveloperDocument } from './schemas/developers.schema';
 import { DeveloperFilter } from './developers.interface';
+import { Types } from 'mongoose';
 
 @Injectable()
 export class DevelopersService {
@@ -22,6 +23,8 @@ export class DevelopersService {
     developer: CreateDeveloperDto,
     logo: string,
   ): Promise<DeveloperDocument> {
+    const userObjectId = new Types.ObjectId(userId);
+
     // Check if the reference number already exists
     const existingDevelopers = await this.getMany({
       referenceNumber: developer.referenceNumber,
@@ -32,7 +35,7 @@ export class DevelopersService {
     }
 
     const newDeveloper = new this.developerModel({
-      userId,
+      userId: userObjectId,
       logo,
       ...developer,
     });

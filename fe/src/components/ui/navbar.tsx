@@ -1,8 +1,35 @@
+"use client";
+
 import Image from "next/image";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
+import { useEffect, useState } from "react";
+import { useUserContext } from "@/context/UserContext";
 
 export function Navbar() {
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const { setUser, user } = useUserContext();
+
+  useEffect(() => {
+    // The proper way to handle this part is to validate the token from the backend before setting setIsLoggedIn(true).
+    // This is for the task implementation, not for a real project.
+    const token = localStorage.getItem("nawy-token");
+    if (token) {
+      setIsLoggedIn(true);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (user) {
+      setIsLoggedIn(true);
+    }
+  }, [user]);
+
+  const handleLogout = () => {
+    localStorage.removeItem("nawy-token");
+    setIsLoggedIn(false);
+  };
+
   return (
     <nav className="fixed top-0 left-0 w-full z-50 flex items-center justify-between px-6 py-4 border-b bg-white">
       {/* Left Side: Logo */}
@@ -17,9 +44,21 @@ export function Navbar() {
         <Button variant="link" asChild>
           <Link href="/">Home</Link>
         </Button>
-        <Button variant="link" asChild>
-          <Link href="/login">Login</Link>
-        </Button>
+
+        {isLoggedIn ? (
+          <>
+            <Button variant="link" asChild>
+              <Link href="/property/create">Create Property</Link>
+            </Button>
+            <Button variant="link" onClick={handleLogout}>
+              <Link href="/login">Logout</Link>
+            </Button>
+          </>
+        ) : (
+          <Button variant="link" asChild>
+            <Link href="/login">Login</Link>
+          </Button>
+        )}
       </div>
     </nav>
   );
