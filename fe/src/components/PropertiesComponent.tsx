@@ -40,7 +40,7 @@ const PropertiesComponent = ({ properties }: PropertiesSectionProps) => {
                     style={{ backgroundImage: `url(${property.images[0]})` }}
                   >
                     <div className="absolute bottom-2 left-2 group">
-                      <Image
+                      <img
                         src={property.developerId.logo}
                         alt="Developer Logo"
                         width={50}

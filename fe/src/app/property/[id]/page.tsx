@@ -96,7 +96,7 @@ export default function PropertyDetails() {
               {property.images.map((image: string, index: number) => (
                 <CarouselItem key={index}>
                   <div className="relative h-[75vh]">
-                    <Image
+                    <img
                       src={image}
                       alt={`Property Image ${index + 1}`}
                       width={900}
@@ -117,7 +117,7 @@ export default function PropertyDetails() {
       <div className="mt-8 flex items-center gap-8">
         {/* Developer Logo */}
         <div className="flex-shrink-0">
-          <Image
+          <img
             src={property.developerId.logo}
             alt="Developer Logo"
             width={80}

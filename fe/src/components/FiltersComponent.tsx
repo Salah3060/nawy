@@ -140,7 +140,7 @@ const FiltersComponent = ({
                 onChange={(e) =>
                   setFilters((prev) => ({
                     ...prev,
-                    propertyNumber: Number(e.target.value),
+                    propertyNumber: e.target.value.toString(),
                   }))
                 }
                 className="w-full p-3 rounded-2xl shadow-md"

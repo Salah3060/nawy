@@ -26,7 +26,7 @@ export interface PropertyFormData {
 
 export interface PropertyFilter {
   name: string;
-  propertyNumber: number;
+  propertyNumber: string;
   propertyType: string;
   beds: string;
   baths: string;

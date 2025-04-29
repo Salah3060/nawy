@@ -106,12 +106,7 @@ export default function LoginPage() {
       {/* Right side - Image */}
       <div className="hidden lg:flex w-1/2 items-center justify-center p-5">
         <div className="relative w-full h-5/6 rounded-2xl overflow-hidden shadow-lg animate-float">
-          <Image
-            src="/login-11.jpg"
-            alt="Building"
-            fill
-            className="object-cover"
-          />
+          <img src="/login-11.jpg" alt="Building" className="object-cover" />
         </div>
       </div>
     </div>

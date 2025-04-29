@@ -28,7 +28,7 @@ export function Navbar() {
       {/* Left Side: Logo */}
       <div className="text-2xl font-bold">
         <Link href="/">
-          <Image src="/nawy.svg" alt="Logo" width={100} height={100} />
+          <img src="/nawy.svg" alt="Logo" width={100} height={100} />
         </Link>
       </div>
 

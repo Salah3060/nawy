@@ -1,39 +1,29 @@
+version: "3.9"
 services:
-  # mongo:
-  #   image: mongo
-  #   container_name: mongo
-  #   ports:
-  #     - "27017:27017"
-  #   volumes:
-  #     - mongo-data:/data/db
-  #   networks:
-  #     - app-network
-
   backend:
-    build: ./be
+    build:
+      context: ./be
     container_name: backend
+    restart: always
     ports:
-      - "3001:3001"
-    # environment:
-    # - MONGO_URI=mongodb://mongo:27017/Nawy
-    # depends_on:
-    # - mongo
-    networks:
-      - app-network
+      - 3001:3001
+    environment:
+      - MONGO_URI=mongodb+srv://Ahmed:QIzL7kIVM5Vmexq9@cluster0.zkrlfzw.mongodb.net/Nawy
+      - PORT=3001
+      - JWT_SECRET=B[T@_6_-M2ux\^u),<7D9hsu99x.2-}bX_2bUXgnW?5YT*cn$d{HjvBW^Jfs]j
+      - JWT_EXPIRES_IN=1d
+      - CLOUDINARY_CLOUD_NAME=dsvyqthlb
+      - CLOUDINARY_API_KEY=832569629619839
+      - CLOUDINARY_API_SECRET=3NAgmWZ7N20alflqmFVSUg_hRZY
 
   frontend:
-    build: ./fe
+    build:
+      context: ./fe
     container_name: frontend
+    restart: always
     ports:
-      - "3000:3000"
+      - 3000:3000
     depends_on:
       - backend
-    networks:
-      - app-network
-
-volumes:
-  mongo-data:
-
-networks:
-  app-network:
-    driver: bridge
+    environment:
+      - NEXT_PUBLIC_API_URL=http://localhost:3001
