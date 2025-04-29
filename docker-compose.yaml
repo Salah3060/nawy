@@ -7,14 +7,6 @@ services:
     restart: always
     ports:
       - 3001:3001
-    environment:
-      - MONGO_URI=mongodb+srv://Ahmed:QIzL7kIVM5Vmexq9@cluster0.zkrlfzw.mongodb.net/Nawy
-      - PORT=3001
-      - JWT_SECRET=B[T@_6_-M2ux\^u),<7D9hsu99x.2-}bX_2bUXgnW?5YT*cn$d{HjvBW^Jfs]j
-      - JWT_EXPIRES_IN=1d
-      - CLOUDINARY_CLOUD_NAME=dsvyqthlb
-      - CLOUDINARY_API_KEY=832569629619839
-      - CLOUDINARY_API_SECRET=3NAgmWZ7N20alflqmFVSUg_hRZY
 
   frontend:
     build:
@@ -25,5 +17,3 @@ services:
       - 3000:3000
     depends_on:
       - backend
-    environment:
-      - NEXT_PUBLIC_API_URL=http://localhost:3001
