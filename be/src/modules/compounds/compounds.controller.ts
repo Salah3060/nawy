@@ -1,3 +1,4 @@
+// Nest
 import {
   BadRequestException,
   Body,
@@ -11,19 +12,36 @@ import {
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
-import { CompoundsService } from './compounds.service';
-import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
-import { CreateCompoundDto } from './dtos/createCompoundDto';
-import { Compound } from './schemas/compounds.schema';
-import { RequestWithUser } from '../../common/interfaces/request-with-user.interface';
 import {
   FileFieldsInterceptor,
   FileInterceptor,
 } from '@nestjs/platform-express';
-import { CloudinaryService } from '../../common/cloudinary/cloudinary.service';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiResponse,
+  ApiBearerAuth,
+} from '@nestjs/swagger';
+
+// Lib
 import { imageFileFilter, MAX_FILE_SIZE } from '../../config/multer.config';
-import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
+
+// Services
+import { CompoundsService } from './compounds.service';
+import { CloudinaryService } from '../../common/cloudinary/cloudinary.service';
+
+// Guard
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+
+// Schemas
+import { Compound } from './schemas/compounds.schema';
+
+// Dtos
+import { CreateCompoundDto } from './dtos/createCompoundDto';
 import { GetCompoundsDto } from './dtos/getCompoundsDto';
+
+// Interfaces
+import { RequestWithUser } from '../../common/interfaces/request-with-user.interface';
 
 @ApiTags('compounds')
 @Controller('compounds')
@@ -34,6 +52,7 @@ export class CompoundsController {
   ) {}
 
   @Post('create')
+  @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   @UseInterceptors(
     FileFieldsInterceptor(
@@ -99,7 +118,11 @@ export class CompoundsController {
 
   @Get('all')
   @ApiOperation({ summary: 'Get all compounds with pagination' })
-  @ApiResponse({ status: 200, description: 'List of compounds returned.' })
+  @ApiResponse({
+    status: 200,
+    description: 'List of compounds returned.',
+    type: [Compound],
+  })
   async findAll(@Query() query: GetCompoundsDto): Promise<Compound[]> {
     return this.compoundsService.getMany(
       { isDeleted: false },

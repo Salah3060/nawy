@@ -1,10 +1,18 @@
-import { Navbar } from "@/components/ui/navbar";
+// React
 import type { Metadata } from "next";
-import "../styles/globals.css";
+
+// Components
+import { Navbar } from "@/components/ui/navbar";
+import ClientValidator from "@/components/ClientValidator";
+
+// Context
 import { MessageProvider } from "@/context/MessageContext";
 import { UserProvider } from "@/context/UserContext";
-import { Toaster } from "sonner";
 
+// Css
+import "../styles/globals.css";
+
+// Meta Data
 export const metadata: Metadata = {
   title: "Nawy",
   description: "Nawy Real Estate.",
@@ -13,19 +21,21 @@ export const metadata: Metadata = {
   },
 };
 
+// Root Layout
 export default function RootLayout({
   children,
-}: Readonly<{
+}: {
   children: React.ReactNode;
-}>) {
+}) {
   return (
     <html lang="en">
       <body>
         <UserProvider>
           <MessageProvider>
-            <Navbar />
-            <Toaster position="bottom-right" />
-            {children}
+            <ClientValidator>
+              <Navbar />
+              {children}
+            </ClientValidator>
           </MessageProvider>
         </UserProvider>
       </body>

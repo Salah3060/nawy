@@ -16,6 +16,12 @@ function generateQueryParams(
   params.append("page", String(page));
   params.append("limit", String(limit));
 
+  if (filters.name) {
+    params.append("name", filters.name);
+  }
+  if (filters.propertyNumber) {
+    params.append("referenceNumber", filters.propertyNumber);
+  }
   if (filters.propertyType) {
     params.append("type", filters.propertyType);
   }

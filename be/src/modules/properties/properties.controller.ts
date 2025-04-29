@@ -1,3 +1,4 @@
+// Nest
 import {
   BadRequestException,
   Body,
@@ -12,23 +13,40 @@ import {
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
-import { RequestWithUser } from '../../common/interfaces/request-with-user.interface';
 import {
   FileFieldsInterceptor,
   FileInterceptor,
 } from '@nestjs/platform-express';
-import { CloudinaryService } from '../../common/cloudinary/cloudinary.service';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiResponse,
+  ApiBearerAuth,
+} from '@nestjs/swagger';
+
+// Lib
 import { imageFileFilter, MAX_FILE_SIZE } from '../../config/multer.config';
+import { Types } from 'mongoose';
+
+// Services
+import { CloudinaryService } from '../../common/cloudinary/cloudinary.service';
 import { PropertiesService } from './properties.service';
+import { DevelopersService } from '../developers/developers.service';
+
+// Guard
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
-import { CreatePropertyDto } from './dtos/createPropertyDto';
+
+// Schemas
 import { Property, PropertyDocument } from './schemas/properties.schema';
+
+// Dtos
+import { CreatePropertyDto } from './dtos/createPropertyDto';
 import { GetPropertiesDto } from './dtos/getPropertiesDto';
 import { GetPropertyDto } from './dtos/getPropertyDto';
-import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
+
+// Interfaces
+import { RequestWithUser } from '../../common/interfaces/request-with-user.interface';
 import { PropertyFilter } from './properties.interface';
-import { DevelopersService } from '../developers/developers.service';
-import { Types } from 'mongoose';
 
 @ApiTags('properties')
 @Controller('properties')
@@ -40,6 +58,7 @@ export class PropertiesController {
   ) {}
 
   @Post('create')
+  @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   @UseInterceptors(
     FileFieldsInterceptor(
@@ -54,7 +73,11 @@ export class PropertiesController {
     ),
   )
   @ApiOperation({ summary: 'Create a new property' })
-  @ApiResponse({ status: 201, description: 'Property created successfully.' })
+  @ApiResponse({
+    status: 201,
+    description: 'Property created successfully.',
+    type: Property,
+  })
   @ApiResponse({ status: 400, description: 'Missing required image(s).' })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   async create(
@@ -100,9 +123,15 @@ export class PropertiesController {
 
   @Get('all')
   @ApiOperation({ summary: 'Get all properties with pagination' })
-  @ApiResponse({ status: 200, description: 'List of properties returned.' })
+  @ApiResponse({
+    status: 200,
+    description: 'List of properties returned.',
+    type: [Property],
+  })
   async findAll(@Query() query: GetPropertiesDto): Promise<Property[]> {
     let filter: PropertyFilter = { isDeleted: false };
+    if (query.name) filter.name = { $regex: query.name, $options: 'i' };
+    if (query.referenceNumber) filter.referenceNumber = query.referenceNumber;
     if (query.type) filter.type = query.type;
     if (query.beds) {
       if (query.beds === 5) {
@@ -138,7 +167,11 @@ export class PropertiesController {
 
   @Get('one/:id')
   @ApiOperation({ summary: 'Get single property by ID' })
-  @ApiResponse({ status: 200, description: 'Property returned successfully.' })
+  @ApiResponse({
+    status: 200,
+    description: 'Property returned successfully.',
+    type: Property,
+  })
   @ApiResponse({ status: 404, description: 'Property not found.' })
   async findOne(@Param() { id }: GetPropertyDto): Promise<Property> {
     return this.propertiesService.getOne({ _id: id, isDeleted: false }, '', [

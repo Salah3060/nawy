@@ -25,6 +25,8 @@ export interface PropertyFormData {
 }
 
 export interface PropertyFilter {
+  name: string;
+  propertyNumber: number;
   propertyType: string;
   beds: string;
   baths: string;
@@ -40,7 +42,7 @@ export interface Property {
   description?: string;
   referenceNumber?: number;
 
-  compoundId?: Types.ObjectId;
+  compoundId?: { _id: Types.ObjectId; name: string; masterPlan: string };
   latitude?: number;
   longitude?: number;
 
@@ -56,7 +58,7 @@ export interface Property {
   parkingSpaces?: number;
   finishingStatus?: string;
   finishingType?: string;
-  deliveryDate?: Date;
+  deliveryDate?: string;
   price?: number;
   amenities?: string[];
   floorPlan?: string;

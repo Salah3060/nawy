@@ -1,3 +1,7 @@
+// Nest
+import { ApiProperty } from '@nestjs/swagger';
+
+// Lib
 import {
   IsString,
   IsNotEmpty,
@@ -11,12 +15,13 @@ import {
   IsOptional,
 } from 'class-validator';
 import { Types } from 'mongoose';
+
+// Enums
 import {
   FinishingStatus,
   FinishingType,
   PropertyType,
 } from '../properties.enum';
-import { ApiProperty } from '@nestjs/swagger';
 
 export class CreatePropertyDto {
   // Basic Info

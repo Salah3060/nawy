@@ -1,4 +1,7 @@
+// Nest
 import { IsString, IsNotEmpty } from 'class-validator';
+
+// Lib
 import { ApiProperty } from '@nestjs/swagger';
 
 export class LoginDto {

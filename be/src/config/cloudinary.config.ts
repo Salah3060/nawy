@@ -1,5 +1,8 @@
-import { v2 as cloudinary } from 'cloudinary';
+// Nest
 import { ConfigService } from '@nestjs/config';
+
+// Lib
+import { v2 as cloudinary } from 'cloudinary';
 
 export const configureCloudinary = (configService: ConfigService) => {
   cloudinary.config({

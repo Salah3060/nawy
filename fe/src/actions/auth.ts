@@ -9,3 +9,18 @@ export async function login(email: string, password: string) {
   });
   return response;
 }
+
+// Login
+export async function validateToken() {
+  const token = localStorage.getItem("nawy-token");
+  const response = await axios.post(
+    "/api-v1/auth/validate-token",
+    {},
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    }
+  );
+  return response;
+}

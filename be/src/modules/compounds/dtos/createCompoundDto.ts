@@ -1,3 +1,7 @@
+// Nest
+import { ApiProperty } from '@nestjs/swagger';
+
+// Lib
 import {
   IsString,
   IsNotEmpty,
@@ -9,7 +13,8 @@ import {
   IsEnum,
 } from 'class-validator';
 import { Types } from 'mongoose';
-import { ApiProperty } from '@nestjs/swagger';
+
+// Enums
 import { CompoundStatus } from '../compound.enum';
 import { PropertyType } from '../../properties/properties.enum';
 

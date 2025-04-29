@@ -1,7 +1,9 @@
 "use client";
 
+// React
 import { createContext, useContext, useState, ReactNode } from "react";
 
+// Interface
 interface UserContextType {
   user: { name: string; username: string; accessToken: string } | null;
   setUser: (user: {
@@ -23,6 +25,7 @@ export const useUserContext = () => {
   return context;
 };
 
+// Provider
 export const UserProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {

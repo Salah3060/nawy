@@ -1,5 +1,4 @@
-// app/login/layout.tsx
-
+// Login Layout
 export default function LoginLayout({
   children,
 }: {

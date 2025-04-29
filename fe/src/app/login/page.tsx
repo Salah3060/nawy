@@ -1,22 +1,35 @@
 "use client";
 
+// React
+import { useState } from "react";
+import Image from "next/image";
+import { useRouter } from "next/navigation";
+
+// Lib
+import axios from "axios";
+
+// Components
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import Image from "next/image";
-import { useState } from "react";
+import LoadingComponent from "@/components/LoadingComponent";
+
+// Actions
 import { login } from "@/actions/auth";
+
+// Context
 import { useMessage } from "@/context/MessageContext";
-import axios from "axios";
 import { useUserContext } from "@/context/UserContext";
-import { useRouter } from "next/navigation";
+
+// Login Page
 export default function LoginPage() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [loading, setLoading] = useState<boolean>(false);
+  const router = useRouter();
   const { setMessage } = useMessage();
   const { setUser } = useUserContext();
-  const router = useRouter();
+  const [loading, setLoading] = useState<boolean>(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
+  // Login
   async function handleLogin(event: React.FormEvent) {
     try {
       event.preventDefault(); // Prevent the default form submission
@@ -46,12 +59,9 @@ export default function LoginPage() {
   }
 
   if (loading) {
-    return (
-      <div className="flex justify-center items-center h-screen">
-        <div className="w-16 h-16 border-4 border-primary border-t-transparent border-solid rounded-full animate-spin"></div>
-      </div>
-    );
+    return <LoadingComponent></LoadingComponent>;
   }
+
   return (
     <div className="min-h-screen flex p-5">
       {/* Left side - Login Form */}

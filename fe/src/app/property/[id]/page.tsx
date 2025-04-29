@@ -1,12 +1,15 @@
-"use client"; // This ensures the component runs on the client side
+"use client";
 
+// React
 import { useEffect, useState } from "react";
-import { useParams } from "next/navigation"; // Use this for route params
-import { getPropertyById } from "@/actions/properties"; // Function to fetch data by ID
-import { FaBed, FaBath, FaRulerCombined, FaCar } from "react-icons/fa";
 import Image from "next/image";
+import { useParams } from "next/navigation";
+
+// Lib
 import axios from "axios";
-import { useMessage } from "@/context/MessageContext";
+import { Types } from "mongoose";
+
+// Components
 import {
   Carousel,
   CarouselContent,
@@ -27,20 +30,36 @@ import {
   DialogTrigger,
   DialogContent,
   DialogTitle,
-} from "@/components/ui/dialog"; // <-- adjust path if needed
+} from "@/components/ui/dialog";
+import LoadingComponent from "@/components/LoadingComponent";
 
+// Actions
+import { getPropertyById } from "@/actions/properties";
+
+// Context
+import { useMessage } from "@/context/MessageContext";
+
+// Interfaces
+import { Property } from "@/interfaces/property.interface";
+
+// Propery Details Page
 export default function PropertyDetails() {
-  const { id } = useParams(); // Get the property ID from the URL
-  const [property, setProperty] = useState<any>(null);
-  const [loading, setLoading] = useState<boolean>(true);
+  const { id } = useParams();
   const { setMessage } = useMessage();
+  const [loading, setLoading] = useState<boolean>(true);
+  const [property, setProperty] = useState<Property>({
+    _id: new Types.ObjectId(),
+    images: [],
+    developerId: { _id: new Types.ObjectId(), logo: "" },
+  });
 
+  // Get Property Details
   useEffect(() => {
     if (id) {
       const fetchProperty = async () => {
         try {
           setLoading(true);
-          const response = await getPropertyById(id as string); // Assuming this function fetches data
+          const response = await getPropertyById(id as string);
           setLoading(false);
           setProperty(response.data);
         } catch (error) {
@@ -56,11 +75,7 @@ export default function PropertyDetails() {
   }, [id]);
 
   if (loading) {
-    return (
-      <div className="flex justify-center items-center h-screen">
-        <div className="w-16 h-16 border-4 border-primary border-t-transparent border-solid rounded-full animate-spin"></div>
-      </div>
-    );
+    return <LoadingComponent></LoadingComponent>;
   }
 
   if (!property) {
@@ -175,7 +190,7 @@ export default function PropertyDetails() {
                 Delivery In
               </TableCell>
               <TableCell className="px-6 py-3">
-                {property.deliveryDate.slice(0, 4)}
+                {property.deliveryDate && property.deliveryDate.slice(0, 4)}
               </TableCell>
             </TableRow>
             <TableRow className="hover:bg-gray-50">
@@ -183,7 +198,7 @@ export default function PropertyDetails() {
                 Compound
               </TableCell>
               <TableCell className="px-6 py-3">
-                {property.compoundId.name}
+                {property.compoundId && property.compoundId.name}
               </TableCell>
             </TableRow>
             <TableRow className="hover:bg-gray-50">
@@ -240,7 +255,7 @@ export default function PropertyDetails() {
           <DialogTrigger asChild>
             <div className="w-full md:w-1/4 bg-white shadow-md rounded-lg overflow-hidden hover:shadow-xl transition-shadow cursor-pointer">
               <img
-                src={property.compoundId.masterPlan}
+                src={property.compoundId && property.compoundId.masterPlan}
                 alt="Master Plan"
                 className="w-full h-32 object-cover"
               />
@@ -255,7 +270,7 @@ export default function PropertyDetails() {
           <DialogContent className="max-w-2xl">
             <DialogTitle className="sr-only">Master Plan</DialogTitle>
             <img
-              src={property.compoundId.masterPlan}
+              src={property.compoundId && property.compoundId.masterPlan}
               alt="Master Plan Full"
               className="w-full h-auto rounded-lg"
             />

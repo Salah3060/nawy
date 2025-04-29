@@ -1,5 +1,8 @@
-import { IsString, IsNotEmpty, IsNumberString } from 'class-validator';
+// Nest
 import { ApiProperty } from '@nestjs/swagger';
+
+// Lib
+import { IsString, IsNotEmpty, IsNumberString } from 'class-validator';
 
 export class CreateDeveloperDto {
   @ApiProperty({

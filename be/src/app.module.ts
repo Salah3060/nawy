@@ -1,14 +1,21 @@
+// Nest
 import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
-import config from './config';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
+
+// Modules
 import { UsersModule } from './modules/users/users.module';
 import { DevelopersModule } from './modules/developers/developers.module';
 import { PropertiesModule } from './modules/properties/properties.module';
 import { AuthModule } from './modules/auth/auth.module';
 import { CloudinaryModule } from './common/cloudinary/cloudinary.module';
 import { CompoundsModule } from './modules/compounds/compounds.module';
+
+// Middlewares
 import { LoggerMiddleware } from './common/middlewares/logger.middleware';
+
+// Config
+import config from './config';
 
 @Module({
   imports: [

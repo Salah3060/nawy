@@ -1,6 +1,9 @@
-import { IsMongoId } from 'class-validator';
-import { Types } from 'mongoose';
+// Nest
 import { ApiProperty } from '@nestjs/swagger';
+
+// Lib
+import { Types } from 'mongoose';
+import { IsMongoId } from 'class-validator';
 
 export class GetPropertyDto {
   @ApiProperty({

@@ -1,5 +1,6 @@
 "use client";
 
+// React
 import React, {
   createContext,
   useState,
@@ -7,11 +8,14 @@ import React, {
   ReactNode,
   useEffect,
 } from "react";
+
+// Components
 import { toast } from "sonner";
 
 // Define the possible types for the message
 type MessageType = "normal" | "success" | "error";
 
+// Interfaces
 interface MessageContextType {
   message: string | null;
   messageType: MessageType;
@@ -33,6 +37,7 @@ interface MessageProviderProps {
   children: ReactNode;
 }
 
+// Provider
 export const MessageProvider: React.FC<MessageProviderProps> = ({
   children,
 }) => {

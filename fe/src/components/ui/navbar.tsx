@@ -8,20 +8,13 @@ import { useUserContext } from "@/context/UserContext";
 
 export function Navbar() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const { setUser, user } = useUserContext();
-
-  useEffect(() => {
-    // The proper way to handle this part is to validate the token from the backend before setting setIsLoggedIn(true).
-    // This is for the task implementation, not for a real project.
-    const token = localStorage.getItem("nawy-token");
-    if (token) {
-      setIsLoggedIn(true);
-    }
-  }, []);
+  const { user } = useUserContext();
 
   useEffect(() => {
     if (user) {
       setIsLoggedIn(true);
+    } else {
+      setIsLoggedIn(false);
     }
   }, [user]);
 

@@ -1,15 +1,26 @@
-import { Compound, CompoundDocument } from './schemas/compounds.schema';
+// Nest
 import {
   BadRequestException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { CreateCompoundDto } from './dtos/createCompoundDto';
-import { Model } from 'mongoose';
 import { InjectModel } from '@nestjs/mongoose';
-import { CompoundFilter } from './compounds.interface';
-import { DevelopersService } from '../developers/developers.service';
+
+// Lib
+import { Model } from 'mongoose';
 import { Types } from 'mongoose';
+
+// Services
+import { DevelopersService } from '../developers/developers.service';
+
+// Schemas
+import { Compound, CompoundDocument } from './schemas/compounds.schema';
+
+// Dtos
+import { CreateCompoundDto } from './dtos/createCompoundDto';
+
+// Interfaces
+import { CompoundFilter } from './compounds.interface';
 
 CreateCompoundDto;
 @Injectable()

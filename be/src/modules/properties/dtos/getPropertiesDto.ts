@@ -1,6 +1,9 @@
+// Nest
+import { ApiProperty } from '@nestjs/swagger';
+
+// Lib
 import { IsOptional, IsString, IsNumber, IsIn } from 'class-validator';
 import { Type } from 'class-transformer';
-import { ApiProperty } from '@nestjs/swagger';
 
 export class GetPropertiesDto {
   @ApiProperty({
@@ -22,6 +25,25 @@ export class GetPropertiesDto {
   @IsOptional()
   @IsNumber()
   limit?: number;
+
+  @ApiProperty({
+    description: 'The property name.',
+    example: 'Agora Sidi Abdelrahman in North Coast',
+    required: false,
+  })
+  @Type(() => String)
+  @IsOptional()
+  @IsString()
+  name?: string;
+
+  @ApiProperty({
+    description: 'The property reference number.',
+    example: 135,
+    required: false,
+  })
+  @Type(() => Number)
+  @IsOptional()
+  referenceNumber?: number;
 
   @ApiProperty({
     description: 'The property type.',

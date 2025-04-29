@@ -1,7 +1,10 @@
+// Nest
 import { Injectable } from '@nestjs/common';
 import { PassportStrategy } from '@nestjs/passport';
-import { Strategy } from 'passport-jwt';
 import { ConfigService } from '@nestjs/config';
+
+// Lib
+import { Strategy } from 'passport-jwt';
 import { ExtractJwt } from 'passport-jwt';
 
 @Injectable()
@@ -18,6 +21,7 @@ export class JwtStrategy extends PassportStrategy(Strategy) {
     // Payload is the decoded JWT token, used to get the user info
     return {
       userId: payload.sub,
+      name: payload.name,
       username: payload.username,
       role: payload.role,
     };

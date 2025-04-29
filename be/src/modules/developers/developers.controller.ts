@@ -1,3 +1,4 @@
+// Nest
 import {
   BadRequestException,
   Body,
@@ -10,16 +11,33 @@ import {
   UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
-import { DevelopersService } from './developers.service';
-import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
-import { CreateDeveloperDto } from './dtos/createDeveloperDto';
-import { Developer } from './schemas/developers.schema';
-import { RequestWithUser } from '../../common/interfaces/request-with-user.interface';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { CloudinaryService } from '../../common/cloudinary/cloudinary.service';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiResponse,
+  ApiBearerAuth,
+} from '@nestjs/swagger';
+
+// Lib
 import { imageFileFilter, MAX_FILE_SIZE } from '../../config/multer.config';
-import { ApiTags, ApiOperation, ApiResponse } from '@nestjs/swagger';
+
+// Services
+import { DevelopersService } from './developers.service';
+import { CloudinaryService } from '../../common/cloudinary/cloudinary.service';
+
+// Guard
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+
+// Schemas
+import { Developer } from './schemas/developers.schema';
+
+// Dtos
+import { CreateDeveloperDto } from './dtos/createDeveloperDto';
 import { GetDevelopersDto } from './dtos/getDevelopersDto';
+
+// Interfaces
+import { RequestWithUser } from '../../common/interfaces/request-with-user.interface';
 
 @ApiTags('developers')
 @Controller('developers')
@@ -30,6 +48,7 @@ export class DevelopersController {
   ) {}
 
   @Post('create')
+  @ApiBearerAuth()
   @UseGuards(JwtAuthGuard)
   @UseInterceptors(
     FileInterceptor('logo', {
@@ -38,7 +57,11 @@ export class DevelopersController {
     }),
   )
   @ApiOperation({ summary: 'Create a new developer' })
-  @ApiResponse({ status: 201, description: 'Developer created successfully.' })
+  @ApiResponse({
+    status: 201,
+    description: 'Developer created successfully.',
+    type: Developer,
+  })
   @ApiResponse({ status: 400, description: 'Logo image is required.' })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
   @ApiResponse({ status: 500, description: 'Internal server error' })
@@ -62,7 +85,11 @@ export class DevelopersController {
 
   @Get('all')
   @ApiOperation({ summary: 'Get all developers with pagination' })
-  @ApiResponse({ status: 200, description: 'List of developers returned.' })
+  @ApiResponse({
+    status: 200,
+    description: 'List of developers returned.',
+    type: [Developer],
+  })
   async findAll(@Query() query: GetDevelopersDto): Promise<Developer[]> {
     return this.developersService.getMany(
       { isDeleted: false },

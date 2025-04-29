@@ -1,5 +1,4 @@
-// app/login/layout.tsx
-
+// Property Layout
 export default function PropertyLayout({
   children,
 }: {

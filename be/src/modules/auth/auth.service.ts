@@ -1,9 +1,20 @@
-import { LoginDto } from './dtos/loginDto';
+// Nest
 import { Injectable, UnauthorizedException } from '@nestjs/common';
-import * as bcrypt from 'bcryptjs';
 import { JwtService } from '@nestjs/jwt';
+
+// Lib
+import * as bcrypt from 'bcryptjs';
+
+// Services
 import UsersService from '../users/users.service';
+
+// Schema
 import { User, UserDocument } from '../users/schemas/user.schema';
+
+// Dtos
+import { LoginDto } from './dtos/loginDto';
+
+// Interfaces
 import { LoginResponse } from './auth.interface';
 
 @Injectable()
@@ -30,7 +41,12 @@ export class AuthService {
   // Login: Generate and return a JWT
   async login(loginDto: LoginDto): Promise<LoginResponse> {
     const user: UserDocument = await this.validateUser(loginDto);
-    const payload = { username: user.username, sub: user._id, role: user.role };
+    const payload = {
+      name: user.name,
+      username: user.username,
+      sub: user._id,
+      role: user.role,
+    };
     return {
       name: user.name,
       username: user.username,

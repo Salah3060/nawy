@@ -1,8 +1,9 @@
+// Lib
 import { Types } from 'mongoose';
 
 export type PropertyFilter = {
   _id?: Types.ObjectId;
-  name?: string;
+  name?: { $regex: string; $options: string };
   referenceNumber?: number;
   type?: string;
   beds?: number | { $gte: number };

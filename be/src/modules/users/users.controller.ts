@@ -1,11 +1,31 @@
+// Nest
+import {
+  ApiTags,
+  ApiOperation,
+  ApiResponse,
+  ApiBody,
+  ApiBearerAuth,
+} from '@nestjs/swagger';
 import { Controller, Post, Body, UseGuards } from '@nestjs/common';
-import { User } from './schemas/user.schema';
-import { CreateUserDto } from './dtos/createUserDto';
-import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
-import { RolesGuard } from '../../common/guards/roles.guard';
-import { Roles } from '../../common/decorators/roles.decorator';
-import { ApiTags, ApiOperation, ApiResponse, ApiBody } from '@nestjs/swagger';
+
+// Lib
+
+// Services
 import UsersService from './users.service';
+
+// Guard
+import { RolesGuard } from '../../common/guards/roles.guard';
+import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+
+// Decorators
+import { Roles } from '../../common/decorators/roles.decorator';
+
+// Schemas
+import { User } from './schemas/user.schema';
+
+// Dtos
+import { CreateUserDto } from './dtos/createUserDto';
+
 @ApiTags('users')
 @Controller('users')
 export class UsersController {
@@ -14,6 +34,7 @@ export class UsersController {
   @UseGuards(JwtAuthGuard, RolesGuard)
   @Roles('admin') // Only admin can access this
   @Post('create')
+  @ApiBearerAuth()
   @ApiOperation({ summary: 'Create a new user' })
   @ApiBody({ type: CreateUserDto })
   @ApiResponse({

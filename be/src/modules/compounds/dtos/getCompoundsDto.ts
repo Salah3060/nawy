@@ -1,6 +1,9 @@
+// Nest
+import { ApiProperty } from '@nestjs/swagger';
+
+// Lib
 import { IsOptional, IsString, IsNumber } from 'class-validator';
 import { Type } from 'class-transformer';
-import { ApiProperty } from '@nestjs/swagger';
 
 export class GetCompoundsDto {
   @ApiProperty({

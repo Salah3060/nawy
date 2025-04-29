@@ -1,14 +1,23 @@
-import { CreateDeveloperDto } from './dtos/createDeveloperDto';
+// Nest
 import {
   BadRequestException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
+
+// Lib
 import { Model } from 'mongoose';
-import { Developer, DeveloperDocument } from './schemas/developers.schema';
-import { DeveloperFilter } from './developers.interface';
 import { Types } from 'mongoose';
+
+// Schemas
+import { Developer, DeveloperDocument } from './schemas/developers.schema';
+
+// Dtos
+import { CreateDeveloperDto } from './dtos/createDeveloperDto';
+
+// Interfaces
+import { DeveloperFilter } from './developers.interface';
 
 @Injectable()
 export class DevelopersService {

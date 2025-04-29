@@ -1,10 +1,19 @@
+// Nest
 import { Module } from '@nestjs/common';
-import { CompoundsService } from './compounds.service';
-import { CompoundsController } from './compounds.controller';
+
+// Modules
 import { MongooseModule } from '@nestjs/mongoose';
 import { CloudinaryModule } from '../../common/cloudinary/cloudinary.module';
-import { Compound, CompoundSchema } from './schemas/compounds.schema';
 import { DevelopersModule } from '../developers/developers.module';
+
+// Controllers
+import { CompoundsController } from './compounds.controller';
+
+// Services
+import { CompoundsService } from './compounds.service';
+
+// Schemas
+import { Compound, CompoundSchema } from './schemas/compounds.schema';
 
 @Module({
   imports: [

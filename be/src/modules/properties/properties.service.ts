@@ -1,16 +1,27 @@
-import { PropertyFilter } from './properties.interface';
-import { Property, PropertyDocument } from './schemas/properties.schema';
+// Nest
 import {
   BadRequestException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
-import { Model } from 'mongoose';
-import { CreatePropertyDto } from './dtos/createPropertyDto';
 import { InjectModel } from '@nestjs/mongoose';
+
+// Lib
+import { Model } from 'mongoose';
+import { Types } from 'mongoose';
+
+// Services
 import { DevelopersService } from '../developers/developers.service';
 import { CompoundsService } from '../compounds/compounds.service';
-import { Types } from 'mongoose';
+
+// Schemas
+import { Property, PropertyDocument } from './schemas/properties.schema';
+
+// Dtos
+import { CreatePropertyDto } from './dtos/createPropertyDto';
+
+// Interfaces
+import { PropertyFilter } from './properties.interface';
 
 @Injectable()
 export class PropertiesService {
