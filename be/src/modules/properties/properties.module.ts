@@ -25,7 +25,8 @@ import { Property, PropertySchema } from './schemas/properties.schema';
     DevelopersModule,
     CompoundsModule,
   ],
-  controllers: [PropertiesController],
+  exports: [PropertiesService],
   providers: [PropertiesService],
+  controllers: [PropertiesController],
 })
 export class PropertiesModule {}

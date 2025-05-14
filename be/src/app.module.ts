@@ -13,6 +13,7 @@ import { CompoundsModule } from './modules/compounds/compounds.module';
 
 // Middlewares
 import { LoggerMiddleware } from './common/middlewares/logger.middleware';
+import { BookingsModule } from './modules/bookings/bookings.module';
 
 // Config
 import config from './config';
@@ -36,6 +37,7 @@ import config from './config';
     AuthModule,
     CloudinaryModule,
     CompoundsModule,
+    BookingsModule,
   ],
   controllers: [],
   providers: [],
