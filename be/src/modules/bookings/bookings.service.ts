@@ -28,17 +28,14 @@ export class BookingsService {
         _id: new Types.ObjectId(createBookingDto.propertyId),
         isDeleted: false,
       });
-      if (!property) {
-        throw new NotFoundException('Property not found');
-      }
+
       // check the property price
       if (property.price !== createBookingDto.price) {
         throw new BadRequestException('Property price does not match');
       }
 
-      const existingBooking = await this.BookingModel.findOne({
+      const existingBooking = await this.getOne({
         propertyId: new Types.ObjectId(createBookingDto.propertyId),
-        isDeleted: false,
       });
       if (existingBooking) {
         throw new BadRequestException(
@@ -51,7 +48,6 @@ export class BookingsService {
         propertyId: new Types.ObjectId(createBookingDto.propertyId),
         userId: new Types.ObjectId(userId),
       }).save();
-      console.log('newBooking', newBooking);
       return { message: 'Booking created successfully', createBookingDto };
     } catch (error) {
       console.error('Error creating booking:', error);
@@ -63,12 +59,12 @@ export class BookingsService {
     // Logic to get all bookings
     return { message: 'List of bookings' };
   }
-  async getOne(filter: BookingInterface): Promise<BookingDocument> {
-    const user = await this.BookingModel.findOne(filter).exec();
+  async getOne(filter: BookingInterface): Promise<BookingDocument | null> {
+    const Booking = await this.BookingModel.findOne(filter).exec();
 
-    if (!user) {
-      throw new NotFoundException('User not found');
-    }
-    return user;
+    // if (!Booking) {
+    //   throw new NotFoundException('Booking not found');
+    // }
+    return Booking;
   }
 }
