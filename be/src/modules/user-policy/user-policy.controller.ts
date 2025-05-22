@@ -7,6 +7,11 @@ import {
   Req,
   UseGuards,
   UseInterceptors,
+  Put,
+  BadGatewayException,
+  Param,
+  BadRequestException,
+  Delete,
 } from '@nestjs/common';
 import {
   ApiTags,
@@ -14,6 +19,7 @@ import {
   ApiResponse,
   ApiBody,
   ApiBearerAuth,
+  ApiParam,
 } from '@nestjs/swagger';
 
 // Lib
@@ -24,6 +30,7 @@ import { UserPolicyService } from './user-policy.service';
 
 // DTOs
 import { CreateUserPolicyDto } from './dtos/create-user-policy.dto';
+import { UpdateUserPolicyDto } from './dtos/update-user-policy.dto';
 
 // Guards
 import { RolesGuard } from '../../common/guards/roles.guard';
@@ -37,6 +44,13 @@ import { Roles } from '../../common/decorators/roles.decorator';
 
 //Interceptors
 import { UserPolicyInterceptor } from './interceptors/response-transform.interceptor';
+
+//Utils
+import { stringToObjectId } from '../../utils/mongodb-object-id.utils';
+import { use } from 'passport';
+
+// Pipes
+import { ParseObjectIdPipe } from './pipes/parse-object-id.pipe';
 
 @ApiTags('user-policy')
 @Controller('user-policy')
@@ -73,9 +87,97 @@ export class UserPolicyController {
     @Req() req: RequestWithUser,
     @Body() createUserPolicyDto: CreateUserPolicyDto,
   ) {
-    return this.userPolicyService.create(
+    return this.userPolicyService.createUserPolicy(
       createUserPolicyDto,
       new Types.ObjectId('682e7b0828949999ab4a3bf0'), // Assuming companyId is in req.user
+    );
+  }
+
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('admin') // Only admin can access this
+  @Put('update/:userPolicyId')
+  @UseInterceptors(UserPolicyInterceptor)
+  @ApiOperation({ summary: 'Update an existing user policy' })
+  @ApiResponse({
+    status: 200,
+    description: 'User policy successfully updated.',
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Bad request (e.g., validation errors).',
+  })
+  @ApiResponse({
+    status: 401,
+    description: 'Unauthorized (admin role required).',
+  })
+  @ApiResponse({
+    status: 403,
+    description: 'Forbidden (insufficient permissions).',
+  })
+  @ApiBearerAuth()
+  @ApiBody({
+    type: CreateUserPolicyDto,
+    description: 'The user policy data to update',
+  })
+  @ApiParam({
+    name: 'userPolicyId',
+    description: 'The ID of the user policy to update',
+    type: String,
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'User policy updated successfully',
+  })
+  async update(
+    @Req() req: RequestWithUser,
+    @Param('userPolicyId', ParseObjectIdPipe) userPolicyId: Types.ObjectId,
+    @Body() createUserPolicyDto: CreateUserPolicyDto,
+  ) {
+    return this.userPolicyService.updateUserPolicy(
+      userPolicyId,
+      new Types.ObjectId('6823dde4253b413b4a74581e'), // Assuming companyId is in req.user
+      createUserPolicyDto,
+    );
+  }
+
+  @UseGuards(JwtAuthGuard, RolesGuard)
+  @Roles('admin') // Only admin can access this
+  @Delete('delete/:userPolicyId')
+  @UseInterceptors(UserPolicyInterceptor)
+  @ApiOperation({ summary: 'Delete a user policy' })
+  @ApiResponse({
+    status: 200,
+    description: 'User policy successfully deleted.',
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Bad request (e.g., validation errors).',
+  })
+  @ApiResponse({
+    status: 401,
+    description: 'Unauthorized (admin role required).',
+  })
+  @ApiResponse({
+    status: 403,
+    description: 'Forbidden (insufficient permissions).',
+  })
+  @ApiBearerAuth()
+  @ApiParam({
+    name: 'userPolicyId',
+    description: 'The ID of the user policy to delete',
+    type: String,
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'User policy deleted successfully',
+  })
+  async delete(
+    @Req() req: RequestWithUser,
+    @Param('userPolicyId', ParseObjectIdPipe) userPolicyId: Types.ObjectId,
+  ) {
+    return this.userPolicyService.deleteUserPolicy(
+      userPolicyId,
+      new Types.ObjectId('6823dde4253b413b4a74581e'), // Assuming companyId is in req.user
     );
   }
 }

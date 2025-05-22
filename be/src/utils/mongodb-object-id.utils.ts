@@ -2,7 +2,9 @@
 
 import { Types } from 'mongoose';
 
-export const stringToObjectId = (id: string): Types.ObjectId | undefined => {
+export const stringToObjectId = (
+  id: string | null,
+): Types.ObjectId | undefined => {
   if (!id || !Types.ObjectId.isValid(id)) {
     return undefined;
   }

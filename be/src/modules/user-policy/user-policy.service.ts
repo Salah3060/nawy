@@ -3,6 +3,7 @@ import {
   Injectable,
   NotFoundException,
   BadRequestException,
+  Type,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 
@@ -14,6 +15,7 @@ import { UserPolicy, UserPolicyDocument } from './entities/user-policy.entity';
 
 // DTOs
 import { CreateUserPolicyDto } from './dtos/create-user-policy.dto';
+import { UpdateUserPolicyDto } from './dtos/update-user-policy.dto';
 
 // Interfaces
 import { UserPolicyInterface } from './user-policy.interface';
@@ -28,7 +30,7 @@ export class UserPolicyService {
     private readonly userPolicyModel: Model<UserPolicyDocument>,
   ) {}
 
-  async create(
+  async createUserPolicy(
     createUserPolicyDto: CreateUserPolicyDto,
     companyId: Types.ObjectId,
   ): Promise<UserPolicyDocument> {
@@ -54,6 +56,47 @@ export class UserPolicyService {
     return await newUserPolicy.save();
   }
 
+  async updateUserPolicy(
+    id: Types.ObjectId,
+    companyId: Types.ObjectId,
+    updateUserPolicyDto: UpdateUserPolicyDto,
+  ): Promise<UserPolicyDocument> {
+    const userPolicy = await this.updateOne(
+      {
+        _id: id,
+        companyId: companyId,
+        isDeleted: false,
+      },
+      updateUserPolicyDto,
+    );
+    if (!userPolicy) {
+      throw new NotFoundException({
+        message: 'failure',
+        details: 'User Policy not found',
+        messageCode: 10,
+      });
+    }
+    return userPolicy;
+  }
+
+  async deleteUserPolicy(
+    id: Types.ObjectId,
+    companyId: Types.ObjectId,
+  ): Promise<UserPolicyDocument> {
+    const userPolicy = await this.updateOne(
+      { _id: id, companyId, isDeleted: false },
+      { isDeleted: true },
+    );
+    if (!userPolicy) {
+      throw new NotFoundException({
+        message: 'failure',
+        details: 'User Policy not found',
+        messageCode: 10,
+      });
+    }
+    return userPolicy;
+  }
+
   async getOne(
     filter: UserPolicyInterface,
     selections: string = '',
@@ -63,6 +106,18 @@ export class UserPolicyService {
       .select(selections)
       .exec();
 
+    return userPolicy;
+  }
+  async updateOne(
+    filterObject: UserPolicyInterface,
+    updateUserPolicyDto: UpdateUserPolicyDto,
+  ): Promise<UserPolicyDocument | null> {
+    const userPolicy = await this.userPolicyModel
+      .findOneAndUpdate(filterObject, updateUserPolicyDto, {
+        new: true,
+        runValidators: true,
+      })
+      .exec();
     return userPolicy;
   }
 }
