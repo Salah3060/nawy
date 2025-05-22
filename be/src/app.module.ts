@@ -14,6 +14,7 @@ import { CompoundsModule } from './modules/compounds/compounds.module';
 // Middlewares
 import { LoggerMiddleware } from './common/middlewares/logger.middleware';
 import { BookingsModule } from './modules/bookings/bookings.module';
+import { UserPolicyModule } from './modules/user-policy/user-policy.module';
 
 // Config
 import config from './config';
@@ -38,6 +39,7 @@ import config from './config';
     CloudinaryModule,
     CompoundsModule,
     BookingsModule,
+    UserPolicyModule,
   ],
   controllers: [],
   providers: [],

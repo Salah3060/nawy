@@ -50,6 +50,7 @@ export class AuthService {
     return {
       name: user.name,
       username: user.username,
+      role: user.role,
       accessToken: this.jwtService.sign(payload), // Sign and generate JWT
     };
   }
