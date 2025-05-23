@@ -180,4 +180,70 @@ export class UserPolicyController {
       new Types.ObjectId('6823dde4253b413b4a74581e'), // Assuming companyId is in req.user
     );
   }
+  @UseGuards(JwtAuthGuard)
+  @Get('get/one/:role')
+  @UseInterceptors(UserPolicyInterceptor)
+  @ApiOperation({ summary: 'Get a user policy by role' })
+  @ApiResponse({
+    status: 200,
+    description: 'User policy successfully retrieved.',
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Bad request (e.g., validation errors).',
+  })
+  @ApiResponse({
+    status: 401,
+    description: 'Unauthorized (admin role required).',
+  })
+  @ApiResponse({
+    status: 403,
+    description: 'Forbidden (insufficient permissions).',
+  })
+  @ApiBearerAuth()
+  @ApiParam({
+    name: 'role',
+    description: 'The role',
+    type: String,
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'User policy retrieved successfully',
+  })
+  async getOne(@Req() req: RequestWithUser, @Param('role') role: string) {
+    return this.userPolicyService.getUserPolicy(
+      role,
+      new Types.ObjectId('6823dde4253b413b4a74581e'), // Assuming companyId is in req.user
+    );
+  }
+  @UseGuards(JwtAuthGuard)
+  @Get('get/company')
+  @UseInterceptors(UserPolicyInterceptor)
+  @ApiOperation({ summary: 'Get all user policies for a company' })
+  @ApiResponse({
+    status: 200,
+    description: 'User policies successfully retrieved.',
+  })
+  @ApiResponse({
+    status: 400,
+    description: 'Bad request (e.g., validation errors).',
+  })
+  @ApiResponse({
+    status: 401,
+    description: 'Unauthorized (admin role required).',
+  })
+  @ApiResponse({
+    status: 403,
+    description: 'Forbidden (insufficient permissions).',
+  })
+  @ApiBearerAuth()
+  @ApiResponse({
+    status: 200,
+    description: 'User policies retrieved successfully',
+  })
+  async getAll(@Req() req: RequestWithUser) {
+    return this.userPolicyService.getCompanyUserPolicies(
+      new Types.ObjectId('6823dde4253b413b4a74581e'), // Assuming companyId is in req.user
+    );
+  }
 }

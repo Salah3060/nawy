@@ -20,10 +20,7 @@ export class UserPolicyInterceptor implements NestInterceptor {
         const path = request.route.path;
 
         // Check if this is a creation - update - delete endpoint for user policy
-        if (
-          (method === 'POST' || method === 'PUT' || method === 'DELETE') &&
-          path.includes('user-policy')
-        ) {
+        if (path.includes('user-policy')) {
           return {
             message: 'success',
             res: {

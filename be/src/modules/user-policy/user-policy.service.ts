@@ -78,6 +78,35 @@ export class UserPolicyService {
     }
     return userPolicy;
   }
+  async getUserPolicy(
+    role: string,
+    companyId: Types.ObjectId,
+  ): Promise<UserPolicyDocument> {
+    const userPolicy = await this.getOne({
+      role: role,
+      companyId: companyId,
+      isDeleted: false,
+    });
+    return userPolicy || ({} as UserPolicyDocument);
+  }
+  async getCompanyUserPolicies(
+    companyId: Types.ObjectId,
+    page: number = 1,
+    limit: number = 50,
+  ): Promise<UserPolicyDocument[]> {
+    const userPolicies = await this.getMany(
+      {
+        companyId: companyId,
+        isDeleted: false,
+      },
+      '',
+      page,
+      limit,
+    );
+    return userPolicies || [];
+  }
+
+  /// just for working with db without any other logic
 
   async deleteUserPolicy(
     id: Types.ObjectId,
@@ -107,6 +136,20 @@ export class UserPolicyService {
       .exec();
 
     return userPolicy;
+  }
+  async getMany(
+    filter: UserPolicyInterface,
+    selections: string = '',
+    page: number = 1,
+    limit: number = 50,
+  ): Promise<UserPolicyDocument[]> {
+    const userPolicies = await this.userPolicyModel
+      .find(filter)
+      .select(selections)
+      .skip((page - 1) * limit)
+      .limit(limit)
+      .exec();
+    return userPolicies;
   }
   async updateOne(
     filterObject: UserPolicyInterface,
