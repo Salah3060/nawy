@@ -35,12 +35,14 @@ import { UpdateUserPolicyDto } from './dtos/update-user-policy.dto';
 // Guards
 import { RolesGuard } from '../../common/guards/roles.guard';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
+import { UserPolicyGuard } from './guards/user-policy.guard';
 
 // Interfaces
 import { RequestWithUser } from '../../common/interfaces/request-with-user.interface';
 
 // Decorators
 import { Roles } from '../../common/decorators/roles.decorator';
+import { RequireMenuItem } from './decorators/require-menu-item.decorator';
 
 //Interceptors
 import { UserPolicyInterceptor } from './interceptors/response-transform.interceptor';
@@ -51,6 +53,9 @@ import { use } from 'passport';
 
 // Pipes
 import { ParseObjectIdPipe } from './pipes/parse-object-id.pipe';
+
+// Enums
+import { MenuItems } from './enums/menu-item.enum';
 
 @ApiTags('user-policy')
 @Controller('user-policy')
@@ -135,7 +140,7 @@ export class UserPolicyController {
   ) {
     return this.userPolicyService.updateUserPolicy(
       userPolicyId,
-      new Types.ObjectId('6823dde4253b413b4a74581e'), // Assuming companyId is in req.user
+      new Types.ObjectId('682e7b0828949999ab4a3bf0'), // Assuming companyId is in req.user
       createUserPolicyDto,
     );
   }
@@ -177,10 +182,13 @@ export class UserPolicyController {
   ) {
     return this.userPolicyService.deleteUserPolicy(
       userPolicyId,
-      new Types.ObjectId('6823dde4253b413b4a74581e'), // Assuming companyId is in req.user
+      new Types.ObjectId('682e7b0828949999ab4a3bf0'), // Assuming companyId is in req.user
     );
   }
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, UserPolicyGuard)
+
+  // just for testing
+  //@RequireMenuItem(MenuItems.USERS)
   @Get('get/one/:role')
   @UseInterceptors(UserPolicyInterceptor)
   @ApiOperation({ summary: 'Get a user policy by role' })
@@ -213,7 +221,7 @@ export class UserPolicyController {
   async getOne(@Req() req: RequestWithUser, @Param('role') role: string) {
     return this.userPolicyService.getUserPolicy(
       role,
-      new Types.ObjectId('6823dde4253b413b4a74581e'), // Assuming companyId is in req.user
+      new Types.ObjectId('682e7b0828949999ab4a3bf0'), // Assuming companyId is in req.user
     );
   }
   @UseGuards(JwtAuthGuard)
@@ -241,7 +249,7 @@ export class UserPolicyController {
     status: 200,
     description: 'User policies retrieved successfully',
   })
-  async getAll(@Req() req: RequestWithUser) {
+  async getCompanyUserPolicies(@Req() req: RequestWithUser) {
     return this.userPolicyService.getCompanyUserPolicies(
       new Types.ObjectId('6823dde4253b413b4a74581e'), // Assuming companyId is in req.user
     );
